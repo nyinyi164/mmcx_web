@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+   <title>Currency Exchange</title>
+
+<p id="demo"></p>
+
+</head>
+
+<body onload="getData()">
+   <h2>Currency Converter</h2>
+   <table border="5" cellpadding="10" bgcolor="purple;">
+       <form name="demo">
+       <tr>
+           <td>
+    <input type="text" name="num" placeholder="Enter Amount"></input>
+           </td>
+
+       </tr>
+ <tr>
+   <td>
+       <select id="currencyType" style="width: 165px; margin-right: 30px;">
+
+       </select>
+
+   </td>
+</tr>
+<tr>
+   <td><input type="text" name="mmk" placeholder="Myanmar Kyat"></td>
+</tr>
+
+
+<tr>
+ <td><input type="button" value="Click Me"  class="loadButton" name="res"   style="width: 150px; color:red;"></input></td>
+</tr>
+</form>
+</table>
+
+<script  src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+var msg;
+function getData(){
+    $.ajax({
+        url         : "http://forex.cbm.gov.mm/api/latest",
+            type        : "POST",
+            contentType : "application/json",
+            dataType    : "json",
+            processData : false,
+            cache       : false,
+    }).done(function( msgg ) {
+        msg = msgg.rates;
+        $.each(msg, function(key, value) {
+            $('#currencyType')
+            .append($('<option>', { value : key })
+            .text(key));
+        });
+    });
+}
+
+$(".loadButton").click(function(e){
+        
+    var e = document.getElementById("currencyType");
+    var cur = e.options[e.selectedIndex].value;
+    var todayRate = msg[cur];
+    todayRate = parseFloat(todayRate.replace(/,/g, ''));
+    if (cur === "JPY"|| cur === "VND" || cur === "KRW" || cur === "KHR" || cur === "IDR" || cur === "LAK" ){
+        todayRate = parseFloat(todayRate) / 100;
+    }
+    var num = parseInt(document.demo.num.value);
+    var values =num * (todayRate);
+    document.demo.mmk.value =parseFloat(values);
+});
+
+</script>
+
+</body>
+</html>
