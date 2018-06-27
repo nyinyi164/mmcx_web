@@ -43,6 +43,7 @@
 <script>
 var msg;
 function getData(){
+    // make ajax request to Central Bank API
     $.ajax({
         url         : "http://forex.cbm.gov.mm/api/latest",
             type        : "POST",
